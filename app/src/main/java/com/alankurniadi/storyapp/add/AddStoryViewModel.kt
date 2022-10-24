@@ -47,7 +47,6 @@ class AddStoryViewModel(private val pref: SettingPreferences) : ViewModel() {
                     "onFailure:${t.message.toString()}",
                 )
             }
-
         })
     }
 

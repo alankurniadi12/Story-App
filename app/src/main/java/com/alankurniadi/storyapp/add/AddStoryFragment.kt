@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -64,7 +63,6 @@ class AddStoryFragment : Fragment() {
     }
 
     companion object {
-        const val TAG = "AddStoryFragment"
         const val CAMERA_X_RESULT = 200
         private val REQUIRED_PERMISSION = arrayOf(android.Manifest.permission.CAMERA)
         private const val REQUEST_CODE_PERMISSIONS = 10
@@ -117,7 +115,6 @@ class AddStoryFragment : Fragment() {
             buttonAdd.setOnClickListener { postNewStory(edAddDescription, addStoryVm) }
 
             addStoryVm.addStory.observe(viewLifecycleOwner) {
-                Log.e(TAG, "onViewCreated addStory.observe:$it")
                 if (it.error != true) {
                     addStoryProgressbar.visibility = View.GONE
                     view.findNavController()
@@ -134,7 +131,6 @@ class AddStoryFragment : Fragment() {
         edAddDescription: TextInputEditText,
         addStoryVm: AddStoryViewModel
     ) {
-        Log.e(TAG, "postNewStory:$edAddDescription, $addStoryVm")
         binding.addStoryProgressbar.visibility = View.VISIBLE
         if (getFile != null) {
             val file = reduceFileImage(getFile as File)
@@ -147,7 +143,6 @@ class AddStoryFragment : Fragment() {
 
             //getToken
             addStoryVm.getToken().observe(viewLifecycleOwner) { token ->
-                Log.e(TAG, "postNewStory getToken().observe:$token")
                 addStoryVm.postNewStory(token, storyText, imageMultipart)
             }
         } else {

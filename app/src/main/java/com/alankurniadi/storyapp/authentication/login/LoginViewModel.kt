@@ -4,11 +4,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.alankurniadi.storyapp.model.ResponseLogin
 import com.alankurniadi.storyapp.network.ApiConfig
 import com.alankurniadi.storyapp.utils.SettingPreferences
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,7 +23,6 @@ class LoginViewModel(private val pref: SettingPreferences) : ViewModel() {
         val client = ApiConfig.getApiService().userLogin(email, password)
         client.enqueue(object : Callback<ResponseLogin> {
             override fun onResponse(call: Call<ResponseLogin>, response: Response<ResponseLogin>) {
-                Log.e("LoginViewModel", "onResponse:${response.body()}", )
                 if (response.isSuccessful) {
                     _login.value = response.body()
                 } else {

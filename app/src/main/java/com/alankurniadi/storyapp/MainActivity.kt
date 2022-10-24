@@ -14,12 +14,8 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 
 class MainActivity : AppCompatActivity() {
 
-    companion object {
-        const val TAG = "MainActivity"
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Log.e(TAG, "onCreate: MainActivity RUNNING", )
     }
 }

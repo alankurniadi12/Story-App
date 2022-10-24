@@ -38,7 +38,6 @@ class RegisterViewModel : ViewModel() {
                     "onFailure: ${t.message.toString()}",
                 )
             }
-
         })
     }
 }

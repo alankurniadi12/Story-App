@@ -1,7 +1,6 @@
 package com.alankurniadi.storyapp.authentication.register
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,10 +23,6 @@ class RegisterFragment : Fragment() {
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
 
-    companion object {
-        private const val TAG = "RegisterFragment"
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,7 +42,6 @@ class RegisterFragment : Fragment() {
             ViewModelProvider(this, ViewModelFactory(pref))[ListStoryViewModel::class.java]
 
         listStoryVm.saveToken("")
-        listStoryVm.saveUsername("")
 
         with(binding) {
             edRegisterName.doOnTextChanged { _, _, _, count ->
@@ -106,7 +100,6 @@ class RegisterFragment : Fragment() {
             }
 
             registerVm.register.observe(viewLifecycleOwner) {
-                Log.e(TAG, "onViewCreated register.observe:$it", )
                 Toast.makeText(requireContext(), "${it.message}", Toast.LENGTH_SHORT).show()
                 if (it.error == false) {
                     findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
@@ -115,7 +108,6 @@ class RegisterFragment : Fragment() {
             }
 
             registerVm.message.observe(viewLifecycleOwner) {
-                Log.e(TAG, "onViewCreated message.observe:$it", )
                 Toast.makeText(requireContext(), "$it,\nCoba lagi dengan nama lain", Toast.LENGTH_LONG).show()
                 registerProgress.visibility = View.GONE
             }
@@ -125,7 +117,6 @@ class RegisterFragment : Fragment() {
             }
         }
     }
-
 
     override fun onDestroy() {
         super.onDestroy()

@@ -1,7 +1,6 @@
 package com.alankurniadi.storyapp.authentication.login
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.alankurniadi.storyapp.R
-import com.alankurniadi.storyapp.authentication.register.RegisterFragment
 import com.alankurniadi.storyapp.dataStore
 import com.alankurniadi.storyapp.databinding.FragmentLoginBinding
 import com.alankurniadi.storyapp.home.ListStoryViewModel
@@ -24,10 +22,6 @@ class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-
-    companion object {
-        const val TAG = "LoginFragment"
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +39,8 @@ class LoginFragment : Fragment() {
         val loginVm = ViewModelProvider(this, ViewModelFactory(pref))[LoginViewModel::class.java]
         val listStoryVm =
             ViewModelProvider(this, ViewModelFactory(pref))[ListStoryViewModel::class.java]
+
+        listStoryVm.saveToken("")
 
         with(binding) {
             edLoginEmail.doOnTextChanged { text, _, _, _ ->
@@ -93,10 +89,8 @@ class LoginFragment : Fragment() {
             loginVm.login.observe(viewLifecycleOwner) {
                 loginProgressbar.visibility = View.GONE
                 val token = it.loginResult?.token.toString()
-                val name = it.loginResult?.name.toString()
 
                 listStoryVm.saveToken(token)
-                listStoryVm.saveUsername(name)
 
                 if (it.message == "success") {
                     findNavController().navigate(R.id.action_loginFragment_to_listStoryFragment)
@@ -105,7 +99,6 @@ class LoginFragment : Fragment() {
 
             loginVm.message.observe(viewLifecycleOwner) {
                 loginProgressbar.visibility = View.GONE
-                Log.e(TAG, "onViewCreated message.observe:$it", )
                 Toast.makeText(requireContext(), "$it,\nUser tidak dikenal, coba lagi atau daftar baru ", Toast.LENGTH_LONG).show()
             }
         }

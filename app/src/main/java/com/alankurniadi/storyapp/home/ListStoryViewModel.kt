@@ -2,7 +2,6 @@ package com.alankurniadi.storyapp.home
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.alankurniadi.storyapp.authentication.login.LoginViewModel
 import com.alankurniadi.storyapp.model.ResponseAllStories
 import com.alankurniadi.storyapp.network.ApiConfig
 import com.alankurniadi.storyapp.utils.SettingPreferences
@@ -20,7 +19,6 @@ class ListStoryViewModel(private val pref: SettingPreferences) : ViewModel() {
     val listStory: LiveData<ResponseAllStories> = _listStory
 
     fun getAllStory(token: String) {
-        Log.e(TAG, "getAllStory token: $token")
         val client = ApiConfig.getApiService().getAllStories(
             "Bearer $token",
             1,
@@ -48,17 +46,7 @@ class ListStoryViewModel(private val pref: SettingPreferences) : ViewModel() {
         }
     }
 
-    fun saveUsername(name: String) {
-        viewModelScope.launch {
-            pref.saveUserName(name)
-        }
-    }
-
     fun getToken(): LiveData<String> {
         return pref.getTokenKey().asLiveData()
-    }
-
-    fun getUserName(): LiveData<String> {
-        return pref.getUserName().asLiveData()
     }
 }

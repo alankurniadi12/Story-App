@@ -23,7 +23,7 @@
         android:id="@+id/til_reg_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="70dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_register">
@@ -105,10 +105,11 @@
         <TextView
             android:id="@+id/tv_login"
             style="@style/TextMediumBold"
-            android:textColor="@color/blue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" Login" />
+            android:layout_marginStart="4dp"
+            android:text="@string/label_login"
+            android:textColor="@color/blue" />
     </LinearLayout>
 
 
@@ -120,5 +121,6 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_register" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_register"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>
