@@ -14,9 +14,7 @@ import com.alankurniadi.storyapp.R
 import com.alankurniadi.storyapp.dataStore
 import com.alankurniadi.storyapp.databinding.FragmentRegisterBinding
 import com.alankurniadi.storyapp.home.ListStoryViewModel
-import com.alankurniadi.storyapp.utils.SettingPreferences
-import com.alankurniadi.storyapp.utils.ViewModelFactory
-import com.alankurniadi.storyapp.utils.isEmailValid
+import com.alankurniadi.storyapp.utils.*
 
 class RegisterFragment : Fragment() {
 
@@ -46,33 +44,39 @@ class RegisterFragment : Fragment() {
         with(binding) {
             edRegisterName.doOnTextChanged { _, _, _, count ->
                 if (count == 0) {
+                    setDisableButton(btnRegister)
                     tilRegName.isErrorEnabled = true
                     tilRegName.error = getString(R.string.label_error_message_name)
                 } else {
+                    setEnableButton(btnRegister)
                     tilRegName.isErrorEnabled = false
                 }
             }
 
             edRegisterEmail.doOnTextChanged { text, _, _, _ ->
                 if (!isEmailValid(text.toString())) {
+                    setDisableButton(btnRegister)
                     tilRegEmail.isErrorEnabled = true
                     tilRegEmail.error = getString(R.string.label_error_message_email_failed)
                 } else {
+                    setEnableButton(btnRegister)
                     tilRegEmail.isErrorEnabled = false
                 }
             }
 
             edRegisterPassword.doOnTextChanged { text, _, _, _ ->
                 if (text!!.length < 6) {
+                    setDisableButton(btnRegister)
                     tilRegPassword.isErrorEnabled = true
                     tilRegPassword.error = getString(R.string.label_error_message_password)
                 } else {
+                    setEnableButton(btnRegister)
                     tilRegPassword.isErrorEnabled = false
                 }
             }
 
             btnRegister.setOnClickListener { view ->
-
+                registerProgress.visibility = View.VISIBLE
                 val name = edRegisterName.text.toString().trim()
                 val email = edRegisterEmail.text.toString().trim()
                 val password = edRegisterPassword.text.toString().trim()
@@ -80,22 +84,26 @@ class RegisterFragment : Fragment() {
                 if (name.isEmpty()) {
                     tilRegName.isErrorEnabled = true
                     tilRegName.error = getString(R.string.label_error_message_name)
+                    setDisableButton(btnRegister)
+                    registerProgress.visibility = View.GONE
                     return@setOnClickListener
                 }
 
                 if (email.isEmpty()) {
                     tilRegEmail.isErrorEnabled = true
                     tilRegEmail.error = getString(R.string.label_error_message_email_empty)
+                    setDisableButton(btnRegister)
+                    registerProgress.visibility = View.GONE
                     return@setOnClickListener
                 }
 
                 if (password.isEmpty()) {
                     tilRegPassword.isErrorEnabled = true
                     tilRegPassword.error = getString(R.string.label_error_message_password)
+                    setDisableButton(btnRegister)
+                    registerProgress.visibility = View.GONE
                     return@setOnClickListener
                 }
-
-                registerProgress.visibility = View.VISIBLE
                 registerVm.postRegister(name, email, password)
             }
 

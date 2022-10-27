@@ -84,3 +84,11 @@ fun reduceFileImage(file: File): File {
     bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(file))
     return file
 }
+
+fun setEnableButton(button: MyButton) {
+    button.isEnabled = true
+}
+
+fun setDisableButton(button: MyButton) {
+    button.isEnabled = false
+}
