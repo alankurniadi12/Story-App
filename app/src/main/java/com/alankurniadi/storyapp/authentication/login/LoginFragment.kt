@@ -14,7 +14,10 @@ import com.alankurniadi.storyapp.R
 import com.alankurniadi.storyapp.dataStore
 import com.alankurniadi.storyapp.databinding.FragmentLoginBinding
 import com.alankurniadi.storyapp.home.ListStoryViewModel
-import com.alankurniadi.storyapp.utils.*
+import com.alankurniadi.storyapp.utils.SettingPreferences
+import com.alankurniadi.storyapp.utils.ViewModelFactory
+import com.alankurniadi.storyapp.utils.setDisableButton
+import com.alankurniadi.storyapp.utils.setEnableButton
 
 class LoginFragment : Fragment() {
 
@@ -42,24 +45,18 @@ class LoginFragment : Fragment() {
 
         with(binding) {
             edLoginEmail.doOnTextChanged { text, _, _, _ ->
-                if (!isEmailValid(text.toString())) {
-                    setDisableButton(btnLogin)
-                    tilLoginEmail.isErrorEnabled = true
-                    tilLoginEmail.error = getString(R.string.label_error_message_email_failed)
-                } else {
+                if (text!!.isNotEmpty()) {
                     setEnableButton(btnLogin)
-                    tilLoginEmail.isErrorEnabled = false
+                } else {
+                    setDisableButton(btnLogin)
                 }
             }
 
             edLoginPassword.doOnTextChanged { text, _, _, _ ->
-                if (text!!.length < 6) {
-                    setDisableButton(btnLogin)
-                    tilLoginPassword.isErrorEnabled = true
-                    tilLoginPassword.error = getString(R.string.label_error_message_password)
-                } else {
+                if (text!!.isNotEmpty()) {
                     setEnableButton(btnLogin)
-                    tilLoginPassword.isErrorEnabled = false
+                } else {
+                    setDisableButton(btnLogin)
                 }
             }
 
@@ -69,16 +66,14 @@ class LoginFragment : Fragment() {
                 val pass = edLoginPassword.text.toString().trim()
 
                 if (email.isEmpty()) {
-                    tilLoginEmail.isErrorEnabled = true
-                    tilLoginEmail.error = getString(R.string.label_error_message_email_empty)
+                    edLoginEmail.error = getString(R.string.label_error_message_email_empty)
                     setDisableButton(btnLogin)
                     loginProgressbar.visibility = View.GONE
                     return@setOnClickListener
                 }
 
                 if (pass.isEmpty()) {
-                    tilLoginPassword.isErrorEnabled = true
-                    tilLoginPassword.error = getString(R.string.label_error_message_password_empty)
+                    edLoginPassword.error = getString(R.string.label_error_message_password_empty)
                     setDisableButton(btnLogin)
                     loginProgressbar.visibility = View.GONE
                     return@setOnClickListener
