@@ -21,7 +21,6 @@ import com.alankurniadi.storyapp.R
 import com.alankurniadi.storyapp.dataStore
 import com.alankurniadi.storyapp.databinding.FragmentAddStoryBinding
 import com.alankurniadi.storyapp.utils.*
-import com.google.android.material.textfield.TextInputEditText
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
