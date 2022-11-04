@@ -30,4 +30,6 @@
     <string name="label_logout">Keluar</string>
     <string name="label_login">Masuk</string>
     <string name="label_image_story">Gambar cerita</string>
+    <string name="label_error_description">Cerita tidak boleh kosong</string>
+    <string name="label_error_empty_description">Masukan cerita anda</string>
 </resources>

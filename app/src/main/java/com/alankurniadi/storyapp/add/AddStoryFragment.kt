@@ -112,7 +112,14 @@ class AddStoryFragment : Fragment() {
         with(binding) {
             btnCamera.setOnClickListener { startCameraX() }
             btnGalery.setOnClickListener { startGallery() }
-            buttonAdd.setOnClickListener { postNewStory(edAddDescription, addStoryVm) }
+            buttonAdd.setOnClickListener {
+                val description = edAddDescription.text.toString().trim()
+                if (description.isEmpty()) {
+                    edAddDescription.error = getString(R.string.label_error_description)
+                } else {
+                    postNewStory(edAddDescription, addStoryVm)
+                }
+            }
 
             addStoryVm.addStory.observe(viewLifecycleOwner) {
                 if (it.error != true) {
@@ -128,7 +135,7 @@ class AddStoryFragment : Fragment() {
     }
 
     private fun postNewStory(
-        edAddDescription: TextInputEditText,
+        story: MyEditText,
         addStoryVm: AddStoryViewModel
     ) {
         binding.addStoryProgressbar.visibility = View.VISIBLE
@@ -136,7 +143,7 @@ class AddStoryFragment : Fragment() {
             val file = reduceFileImage(getFile as File)
 
             val storyText =
-                edAddDescription.text.toString().trim().toRequestBody("text/plain".toMediaType())
+                story.text.toString().trim().toRequestBody("text/plain".toMediaType())
             val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
             val imageMultipart: MultipartBody.Part =
                 MultipartBody.Part.createFormData("photo", file.name, requestImageFile)

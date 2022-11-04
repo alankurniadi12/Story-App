@@ -12,7 +12,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import com.alankurniadi.storyapp.R
 
-class MyEditText: AppCompatEditText, View.OnTouchListener {
+class MyEditTextEmail: AppCompatEditText, View.OnTouchListener {
 
     private lateinit var clearButtonImage: Drawable
 
@@ -39,9 +39,13 @@ class MyEditText: AppCompatEditText, View.OnTouchListener {
             }
 
             override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (text.toString().isNotEmpty()) {
-                    error = context.getString(R.string.label_error_empty_description)
+
+                if (text.toString().isNotEmpty()) showClearButton() else hideClearButton()
+
+                if (!isEmailValid(text.toString())) {
+                    error = context.getString(R.string.label_error_message_email_failed)
                 }
+
             }
 
             override fun afterTextChanged(p0: Editable?) {
