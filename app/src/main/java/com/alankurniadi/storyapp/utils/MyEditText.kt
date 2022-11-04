@@ -39,7 +39,7 @@ class MyEditText: AppCompatEditText, View.OnTouchListener {
             }
 
             override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (text.toString().isNotEmpty()) {
+                if (text.toString().isEmpty()) {
                     error = context.getString(R.string.label_error_empty_description)
                 }
             }
