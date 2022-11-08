@@ -1,12 +1,13 @@
 package com.alankurniadi.storyapp.home
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.alankurniadi.storyapp.R
 import com.alankurniadi.storyapp.databinding.StoryItemBinding
+import com.alankurniadi.storyapp.helper.StoryDiffCallback
 import com.alankurniadi.storyapp.model.ListStoryItem
 import com.bumptech.glide.Glide
 
@@ -15,13 +16,12 @@ class ListStoryAdapter(private val itemClicked: (itemView: StoryItemBinding, dat
 
     private var listStory = ArrayList<ListStoryItem>()
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun setData(data: List<ListStoryItem>?) {
+    fun setData(data: List<ListStoryItem>) {
+        val diffCallback = StoryDiffCallback(this.listStory, data)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         listStory.clear()
-        if (data != null) {
-            listStory.addAll(data)
-        }
-        notifyDataSetChanged()
+        listStory.addAll(data)
+        diffResult.dispatchUpdatesTo(this)
     }
 
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
