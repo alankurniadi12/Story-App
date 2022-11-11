@@ -3,26 +3,31 @@ package com.alankurniadi.storyapp.utils
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import com.alankurniadi.storyapp.R
 
-class MyEditText: AppCompatEditText, View.OnTouchListener {
+class MyEditText : AppCompatEditText, View.OnTouchListener {
 
     private lateinit var clearButtonImage: Drawable
 
     constructor(context: Context) : super(context) {
         init()
     }
+
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         init()
     }
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         init()
     }
 
@@ -31,22 +36,14 @@ class MyEditText: AppCompatEditText, View.OnTouchListener {
     }
 
     private fun init() {
-        clearButtonImage = ContextCompat.getDrawable(context, R.drawable.ic_baseline_close_24) as Drawable
+        clearButtonImage =
+            ContextCompat.getDrawable(context, R.drawable.ic_baseline_close_24) as Drawable
         setOnTouchListener(this)
 
-        addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        addTextChangedListener(onTextChanged = { text, _, _, _ ->
+            if (text.toString().isEmpty()) {
+                error = context.getString(R.string.label_error_empty_description)
             }
-
-            override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (text.toString().isEmpty()) {
-                    error = context.getString(R.string.label_error_empty_description)
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-            }
-
         })
     }
 
@@ -69,12 +66,18 @@ class MyEditText: AppCompatEditText, View.OnTouchListener {
             if (isClearButtonClicked) {
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
-                        clearButtonImage = ContextCompat.getDrawable(context, R.drawable.ic_baseline_close_24) as Drawable
+                        clearButtonImage = ContextCompat.getDrawable(
+                            context,
+                            R.drawable.ic_baseline_close_24
+                        ) as Drawable
                         showClearButton()
                         return true
                     }
                     MotionEvent.ACTION_UP -> {
-                        clearButtonImage = ContextCompat.getDrawable(context, R.drawable.ic_baseline_close_24) as Drawable
+                        clearButtonImage = ContextCompat.getDrawable(
+                            context,
+                            R.drawable.ic_baseline_close_24
+                        ) as Drawable
                         when {
                             text != null -> text?.clear()
                         }
@@ -98,8 +101,8 @@ class MyEditText: AppCompatEditText, View.OnTouchListener {
 
     private fun setButtonDrawables(
         startOfTheText: Drawable? = null,
-        topOfTheText:Drawable? = null,
-        endOfTheText:Drawable? = null,
+        topOfTheText: Drawable? = null,
+        endOfTheText: Drawable? = null,
         bottomOfTheText: Drawable? = null
     ) {
         setCompoundDrawablesWithIntrinsicBounds(
