@@ -6,38 +6,37 @@ import com.alankurniadi.storyapp.model.ResponseLogin
 import com.alankurniadi.storyapp.model.ResponseRegister
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.Call
 import retrofit2.http.*
 
 interface ApiService {
 
     @FormUrlEncoded
     @POST("register")
-    fun userRegister(
+    suspend  fun userRegister(
         @Field("name") name: String,
         @Field("email") email: String,
         @Field("password") password: String
-    ): Call<ResponseRegister>
+    ): ResponseRegister
 
     @FormUrlEncoded
     @POST("login")
-    fun userLogin(
+    suspend fun userLogin(
         @Field("email") email: String,
         @Field("password") password: String
-    ): Call<ResponseLogin>
+    ): ResponseLogin
 
     @GET("stories")
-    fun getAllStories(
+    suspend fun getAllStories(
         @Header("Authorization") token: String,
         @Query("page") page: Int,
         @Query("size") size: Int,
-    ): Call<ResponseAllStories>
+    ): ResponseAllStories
 
     @Multipart
     @POST("stories")
-    fun postNewStory(
+    suspend fun postNewStory(
         @Header("Authorization") token: String,
         @Part("description") description: RequestBody,
         @Part file: MultipartBody.Part
-    ): Call<ResponseAddNewStory>
+    ): ResponseAddNewStory
 }

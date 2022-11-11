@@ -7,14 +7,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.alankurniadi.storyapp.R
-import com.alankurniadi.storyapp.dataStore
+import com.alankurniadi.storyapp.data.Result
 import com.alankurniadi.storyapp.databinding.FragmentLoginBinding
 import com.alankurniadi.storyapp.home.ListStoryViewModel
-import com.alankurniadi.storyapp.utils.SettingPreferences
 import com.alankurniadi.storyapp.utils.ViewModelFactory
 import com.alankurniadi.storyapp.utils.setDisableButton
 import com.alankurniadi.storyapp.utils.setEnableButton
@@ -36,13 +35,11 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val pref = SettingPreferences.getInstance(requireContext().dataStore)
-        val loginVm = ViewModelProvider(this, ViewModelFactory(pref))[LoginViewModel::class.java]
-        val listStoryVm =
-            ViewModelProvider(this, ViewModelFactory(pref))[ListStoryViewModel::class.java]
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireContext())
+        val loginViewModel: LoginViewModel by viewModels { factory }
+        val storyViewModel: ListStoryViewModel by viewModels { factory }
 
-        listStoryVm.saveToken("")
-
+        storyViewModel.saveToken("")
         with(binding) {
             edLoginEmail.doOnTextChanged { text, _, _, _ ->
                 if (text!!.isNotEmpty()) {
@@ -79,28 +76,37 @@ class LoginFragment : Fragment() {
                     return@setOnClickListener
                 }
 
-                loginVm.postLogin(email, pass)
+                loginViewModel.postLogin(email, pass).observe(viewLifecycleOwner) { result ->
+                    if (result != null) {
+                        when (result) {
+                            is Result.Loading -> {
+                                loginProgressbar.visibility = View.VISIBLE
+                            }
+                            is Result.Success -> {
+                                loginProgressbar.visibility = View.GONE
+                                val data = result.data
+                                if (data.error != true) {
+                                    storyViewModel.saveToken(data.loginResult?.token!!)
+                                    findNavController().navigate(R.id.action_loginFragment_to_listStoryFragment)
+                                } else {
+                                    Toast.makeText(context, data.message, Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                            is Result.Error -> {
+                                loginProgressbar.visibility = View.GONE
+                                Toast.makeText(
+                                    context,
+                                    "Terjadi kesalahan (${result.error})",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+                }
             }
 
             tvRegister.setOnClickListener {
                 it.findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
-            }
-
-
-            loginVm.login.observe(viewLifecycleOwner) {
-                loginProgressbar.visibility = View.GONE
-                val token = it.loginResult?.token.toString()
-
-                listStoryVm.saveToken(token)
-
-                if (it.message == "success") {
-                    findNavController().navigate(R.id.action_loginFragment_to_listStoryFragment)
-                }
-            }
-
-            loginVm.message.observe(viewLifecycleOwner) {
-                loginProgressbar.visibility = View.GONE
-                Toast.makeText(requireContext(), "$it,\nUser tidak dikenal, coba lagi atau daftar baru ", Toast.LENGTH_LONG).show()
             }
         }
     }

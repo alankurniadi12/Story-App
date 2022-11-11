@@ -7,14 +7,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.alankurniadi.storyapp.R
-import com.alankurniadi.storyapp.dataStore
+import com.alankurniadi.storyapp.data.Result
 import com.alankurniadi.storyapp.databinding.FragmentRegisterBinding
 import com.alankurniadi.storyapp.home.ListStoryViewModel
-import com.alankurniadi.storyapp.utils.*
+import com.alankurniadi.storyapp.utils.ViewModelFactory
+import com.alankurniadi.storyapp.utils.setDisableButton
+import com.alankurniadi.storyapp.utils.setEnableButton
 
 class RegisterFragment : Fragment() {
 
@@ -33,13 +35,11 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val pref = SettingPreferences.getInstance(requireContext().dataStore)
-        val registerVm =
-            ViewModelProvider(this, ViewModelFactory(pref))[RegisterViewModel::class.java]
-        val listStoryVm =
-            ViewModelProvider(this, ViewModelFactory(pref))[ListStoryViewModel::class.java]
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireContext())
+        val registerViewModel: RegisterViewModel by viewModels { factory }
+        val storyViewModel: ListStoryViewModel by viewModels { factory }
 
-        listStoryVm.saveToken("")
+        storyViewModel.saveToken("")
 
         with(binding) {
             edRegisterName.doOnTextChanged { text, _, _, _ ->
@@ -87,25 +87,38 @@ class RegisterFragment : Fragment() {
                 }
 
                 if (password.isEmpty()) {
-                    edRegisterPassword.error = getString(R.string.label_error_message_password_empty)
+                    edRegisterPassword.error =
+                        getString(R.string.label_error_message_password_empty)
                     setDisableButton(btnRegister)
                     registerProgress.visibility = View.GONE
                     return@setOnClickListener
                 }
-                registerVm.postRegister(name, email, password)
-            }
-
-            registerVm.register.observe(viewLifecycleOwner) {
-                Toast.makeText(requireContext(), "${it.message}", Toast.LENGTH_SHORT).show()
-                if (it.error == false) {
-                    findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
-                }
-                registerProgress.visibility = View.GONE
-            }
-
-            registerVm.message.observe(viewLifecycleOwner) {
-                Toast.makeText(requireContext(), "$it,\nCoba lagi dengan nama lain", Toast.LENGTH_LONG).show()
-                registerProgress.visibility = View.GONE
+                registerViewModel.postRegister(name, email, password)
+                    .observe(viewLifecycleOwner) { result ->
+                        if (result != null) {
+                            when (result) {
+                                is Result.Loading -> {
+                                    registerProgress.visibility = View.VISIBLE
+                                }
+                                is Result.Success -> {
+                                    registerProgress.visibility = View.GONE
+                                    val data = result.data
+                                    if (data.error != true) {
+                                        Toast.makeText(context, data.message, Toast.LENGTH_SHORT)
+                                            .show()
+                                        findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+                                    } else {
+                                        Toast.makeText(context, data.message, Toast.LENGTH_SHORT)
+                                            .show()
+                                    }
+                                }
+                                is Result.Error -> {
+                                    registerProgress.visibility = View.GONE
+                                    Toast.makeText(context, result.error, Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    }
             }
 
             tvLogin.setOnClickListener {

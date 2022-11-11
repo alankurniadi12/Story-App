@@ -1,25 +1,37 @@
 package com.alankurniadi.storyapp.utils
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.alankurniadi.storyapp.add.AddStoryViewModel
 import com.alankurniadi.storyapp.authentication.login.LoginViewModel
 import com.alankurniadi.storyapp.authentication.register.RegisterViewModel
+import com.alankurniadi.storyapp.data.StoryRepository
+import com.alankurniadi.storyapp.di.Injection
 import com.alankurniadi.storyapp.home.ListStoryViewModel
 
-class ViewModelFactory(private val pref: SettingPreferences): ViewModelProvider.NewInstanceFactory() {
-
+class ViewModelFactory(private val storyRepository: StoryRepository) :
+    ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ListStoryViewModel::class.java)) {
-            return ListStoryViewModel(pref) as T
+            return ListStoryViewModel(storyRepository) as T
         } else if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-            return LoginViewModel(pref) as T
+            return LoginViewModel(storyRepository) as T
         } else if (modelClass.isAssignableFrom(RegisterViewModel::class.java)) {
-            return RegisterViewModel() as T
+            return RegisterViewModel(storyRepository) as T
         } else if (modelClass.isAssignableFrom(AddStoryViewModel::class.java)) {
-            return AddStoryViewModel(pref) as T
+            return AddStoryViewModel(storyRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
+    }
+
+    companion object {
+        private var instance: ViewModelFactory? = null
+        fun getInstance(context: Context): ViewModelFactory =
+            instance ?: synchronized(this) {
+                instance ?: ViewModelFactory(Injection.provideStoryRepository(context))
+            }.also { instance = it }
+
     }
 }

@@ -15,11 +15,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.alankurniadi.storyapp.R
-import com.alankurniadi.storyapp.dataStore
+import com.alankurniadi.storyapp.data.Result
 import com.alankurniadi.storyapp.databinding.FragmentAddStoryBinding
+import com.alankurniadi.storyapp.home.ListStoryViewModel
 import com.alankurniadi.storyapp.utils.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -97,9 +98,9 @@ class AddStoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val pref = SettingPreferences.getInstance(requireContext().dataStore)
-        val addStoryVm =
-            ViewModelProvider(this, ViewModelFactory(pref))[AddStoryViewModel::class.java]
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireContext())
+        val addStoryVm: AddStoryViewModel by viewModels { factory }
+        val listStoryVm: ListStoryViewModel by viewModels { factory }
 
         if (!allPermissionsGranted()) {
             ActivityCompat.requestPermissions(
@@ -111,52 +112,73 @@ class AddStoryFragment : Fragment() {
         with(binding) {
             btnCamera.setOnClickListener { startCameraX() }
             btnGalery.setOnClickListener { startGallery() }
+
             buttonAdd.setOnClickListener {
                 val description = edAddDescription.text.toString().trim()
                 if (description.isEmpty()) {
                     edAddDescription.error = getString(R.string.label_error_description)
                 } else {
-                    postNewStory(edAddDescription, addStoryVm)
+                    binding.addStoryProgressbar.visibility = View.VISIBLE
+                    if (getFile != null) {
+                        val file = reduceFileImage(getFile as File)
+
+                        val storyText =
+                            edAddDescription.text.toString().trim()
+                                .toRequestBody("text/plain".toMediaType())
+                        val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+                        val imageMultipart: MultipartBody.Part =
+                            MultipartBody.Part.createFormData("photo", file.name, requestImageFile)
+
+                        //getToken
+                        listStoryVm.getToken().observe(viewLifecycleOwner) { token ->
+                            if (token != null) {
+                                addStoryVm.postNewStory(token, storyText, imageMultipart)
+                                    .observe(viewLifecycleOwner) { result ->
+                                        if (result != null) {
+                                            when (result) {
+                                                is Result.Loading -> {
+                                                    addStoryProgressbar.visibility = View.VISIBLE
+                                                }
+                                                is Result.Success -> {
+                                                    addStoryProgressbar.visibility = View.GONE
+                                                    val data = result.data
+                                                    if (data.error != true) {
+                                                        Toast.makeText(
+                                                            context,
+                                                            data.message,
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                        findNavController().navigate(R.id.action_addStoryFragment_to_listStoryFragment)
+                                                    } else {
+                                                        Toast.makeText(
+                                                            context,
+                                                            data.message,
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                    }
+                                                }
+                                                is Result.Error -> {
+                                                    addStoryProgressbar.visibility = View.GONE
+                                                    Toast.makeText(
+                                                        context,
+                                                        result.error,
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                            }
+                                        }
+                                    }
+                            }
+                        }
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Silakan lengkapi foto dan cerita",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
-
-            addStoryVm.addStory.observe(viewLifecycleOwner) {
-                if (it.error != true) {
-                    addStoryProgressbar.visibility = View.GONE
-                    view.findNavController()
-                        .navigate(R.id.action_addStoryFragment_to_listStoryFragment)
-                } else {
-                    Toast.makeText(requireContext(), "Gagal menambah cerita", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
-        }
-    }
-
-    private fun postNewStory(
-        story: MyEditText,
-        addStoryVm: AddStoryViewModel
-    ) {
-        binding.addStoryProgressbar.visibility = View.VISIBLE
-        if (getFile != null) {
-            val file = reduceFileImage(getFile as File)
-
-            val storyText =
-                story.text.toString().trim().toRequestBody("text/plain".toMediaType())
-            val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
-            val imageMultipart: MultipartBody.Part =
-                MultipartBody.Part.createFormData("photo", file.name, requestImageFile)
-
-            //getToken
-            addStoryVm.getToken().observe(viewLifecycleOwner) { token ->
-                addStoryVm.postNewStory(token, storyText, imageMultipart)
-            }
-        } else {
-            Toast.makeText(
-                requireContext(),
-                "Silakan lengkapi foto dan cerita",
-                Toast.LENGTH_SHORT
-            ).show()
         }
     }
 
