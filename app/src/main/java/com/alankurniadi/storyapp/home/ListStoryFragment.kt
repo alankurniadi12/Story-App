@@ -1,12 +1,16 @@
 package com.alankurniadi.storyapp.home
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.ActivityNavigatorExtras
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
@@ -27,6 +31,7 @@ class ListStoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
+        android.view.Window.FEATURE_CONTENT_TRANSITIONS
         _binding = FragmentListStoryBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -84,39 +89,26 @@ class ListStoryFragment : Fragment() {
             }
         }
 
-//        val pref = SettingPreferences.getInstance(requireContext().dataStore)
-//        val listStoryVm =
-//            ViewModelProvider(this, ViewModelFactory(pref))[ListStoryViewModel::class.java]
-//
-//        listStoryVm.getToken().observe(viewLifecycleOwner) { tokenPref ->
-//            if (tokenPref != "") {
-//                listStoryVm.getAllStory(tokenPref)
-//            } else {
-//                findNavController().navigate(R.id.action_listStoryFragment_to_loginFragment)
-//            }
-//        }
-
-//        listStoryVm.listStory.observe(viewLifecycleOwner) {
-//            with(binding) {
-//                if (it.listStory != null) {
-//                    progressList.visibility = View.GONE
-//
-//                    actionLogout.visibility = View.VISIBLE
-//                    btnAddStory.visibility = View.VISIBLE
-//
-//                    rvStory.visibility = View.VISIBLE
-//                    adapterStory.setData(it.listStory)
-//                }
-//            }
-//        }
-
-        adapterStory = ListStoryAdapter(itemClicked = { _, data ->
-            view.findNavController().navigate(
-                ListStoryFragmentDirections.actionListStoryFragmentToDetailStoryFragment(data),
-                FragmentNavigatorExtras(
-                    binding.root to "list"
-                )
+        adapterStory = ListStoryAdapter(itemClicked = { viewItem, data ->
+            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                requireActivity(),
+                Pair.create(viewItem.ivItemPhoto, "photo"),
+                Pair.create(viewItem.tvItemName, "name"),
+                Pair.create(viewItem.tvItemDesc, "desc")
             )
+            val extras = ActivityNavigatorExtras(options)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                view.findNavController().navigate(
+                    ListStoryFragmentDirections.actionListStoryFragmentToDetailStoryActivity(data),
+                    extras
+                )
+            } else {
+                view.findNavController().navigate(
+                    ListStoryFragmentDirections.actionListStoryFragmentToDetailStoryActivity(data)
+                )
+            }
+
         })
 
         with(binding.rvStory) {

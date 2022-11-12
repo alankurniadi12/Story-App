@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_listStoryFragment_to_addStoryFragment"
             app:destination="@id/addStoryFragment" />
+        <action
+            android:id="@+id/action_listStoryFragment_to_detailStoryActivity"
+            app:destination="@id/detailStoryActivity" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -76,4 +79,13 @@
             app:popUpTo="@id/listStoryFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <activity
+        android:id="@+id/detailStoryActivity"
+        android:name="com.alankurniadi.storyapp.detail.DetailStoryActivity"
+        android:label="activity_detail_story"
+        tools:layout="@layout/activity_detail_story" >
+        <argument
+            android:name="data"
+            app:argType="com.alankurniadi.storyapp.model.ListStoryItem" />
+    </activity>
 </navigation>

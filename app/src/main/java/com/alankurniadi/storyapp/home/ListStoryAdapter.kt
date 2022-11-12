@@ -11,7 +11,7 @@ import com.alankurniadi.storyapp.helper.StoryDiffCallback
 import com.alankurniadi.storyapp.model.ListStoryItem
 import com.bumptech.glide.Glide
 
-class ListStoryAdapter(private val itemClicked: (itemView: StoryItemBinding, data: ListStoryItem) -> Unit) :
+class ListStoryAdapter(private val itemClicked: (viewItem: StoryItemBinding, data: ListStoryItem) -> Unit) :
     RecyclerView.Adapter<ListStoryAdapter.ListViewHolder>() {
 
     private var listStory = ArrayList<ListStoryItem>()
@@ -30,8 +30,10 @@ class ListStoryAdapter(private val itemClicked: (itemView: StoryItemBinding, dat
             with(binding) {
                 Glide.with(itemView.context)
                     .load(data.photoUrl)
+                    .circleCrop()
                     .into(ivItemPhoto)
                 tvItemName.text = data.name
+                tvItemDesc.text = data.description
 
                 root.setOnClickListener {
                     itemClicked(binding, data)
