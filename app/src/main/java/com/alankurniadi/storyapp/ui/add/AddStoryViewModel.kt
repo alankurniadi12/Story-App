@@ -1,4 +1,4 @@
-package com.alankurniadi.storyapp.add
+package com.alankurniadi.storyapp.ui.add
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

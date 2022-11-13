@@ -1,4 +1,4 @@
-package com.alankurniadi.storyapp.add
+package com.alankurniadi.storyapp.ui.add
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
@@ -20,7 +20,7 @@ import androidx.navigation.fragment.findNavController
 import com.alankurniadi.storyapp.R
 import com.alankurniadi.storyapp.data.Result
 import com.alankurniadi.storyapp.databinding.FragmentAddStoryBinding
-import com.alankurniadi.storyapp.home.ListStoryViewModel
+import com.alankurniadi.storyapp.ui.home.ListStoryViewModel
 import com.alankurniadi.storyapp.utils.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

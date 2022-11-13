@@ -1,4 +1,4 @@
-package com.alankurniadi.storyapp.detail
+package com.alankurniadi.storyapp.ui.detail
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

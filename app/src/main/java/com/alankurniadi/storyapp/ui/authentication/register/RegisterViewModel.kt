@@ -1,4 +1,4 @@
-package com.alankurniadi.storyapp.authentication.register
+package com.alankurniadi.storyapp.ui.authentication.register
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

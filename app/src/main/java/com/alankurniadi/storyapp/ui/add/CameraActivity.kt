@@ -1,4 +1,4 @@
-package com.alankurniadi.storyapp.add
+package com.alankurniadi.storyapp.ui.add
 
 import android.content.Intent
 import android.os.Bundle

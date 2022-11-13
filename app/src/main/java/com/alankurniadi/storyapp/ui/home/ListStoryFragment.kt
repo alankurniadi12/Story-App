@@ -1,4 +1,4 @@
-package com.alankurniadi.storyapp.home
+package com.alankurniadi.storyapp.ui.home
 
 import android.os.Build
 import android.os.Bundle
@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.ActivityNavigatorExtras
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alankurniadi.storyapp.R

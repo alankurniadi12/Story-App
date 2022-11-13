@@ -1,4 +1,4 @@
-package com.alankurniadi.storyapp.home
+package com.alankurniadi.storyapp.ui.home
 
 import android.view.LayoutInflater
 import android.view.View

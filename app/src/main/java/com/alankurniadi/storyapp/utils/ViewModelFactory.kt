@@ -3,12 +3,12 @@ package com.alankurniadi.storyapp.utils
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.alankurniadi.storyapp.add.AddStoryViewModel
-import com.alankurniadi.storyapp.authentication.login.LoginViewModel
-import com.alankurniadi.storyapp.authentication.register.RegisterViewModel
+import com.alankurniadi.storyapp.ui.add.AddStoryViewModel
+import com.alankurniadi.storyapp.ui.authentication.login.LoginViewModel
+import com.alankurniadi.storyapp.ui.authentication.register.RegisterViewModel
 import com.alankurniadi.storyapp.data.StoryRepository
 import com.alankurniadi.storyapp.di.Injection
-import com.alankurniadi.storyapp.home.ListStoryViewModel
+import com.alankurniadi.storyapp.ui.home.ListStoryViewModel
 
 class ViewModelFactory(private val storyRepository: StoryRepository) :
     ViewModelProvider.NewInstanceFactory() {

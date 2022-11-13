@@ -1,4 +1,4 @@
-package com.alankurniadi.storyapp.authentication.login
+package com.alankurniadi.storyapp.ui.authentication.login
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.alankurniadi.storyapp.R
 import com.alankurniadi.storyapp.data.Result
 import com.alankurniadi.storyapp.databinding.FragmentLoginBinding
-import com.alankurniadi.storyapp.home.ListStoryViewModel
+import com.alankurniadi.storyapp.ui.home.ListStoryViewModel
 import com.alankurniadi.storyapp.utils.ViewModelFactory
 import com.alankurniadi.storyapp.utils.setDisableButton
 import com.alankurniadi.storyapp.utils.setEnableButton

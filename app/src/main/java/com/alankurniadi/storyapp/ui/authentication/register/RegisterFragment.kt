@@ -1,4 +1,4 @@
-package com.alankurniadi.storyapp.authentication.register
+package com.alankurniadi.storyapp.ui.authentication.register
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.alankurniadi.storyapp.R
 import com.alankurniadi.storyapp.data.Result
 import com.alankurniadi.storyapp.databinding.FragmentRegisterBinding
-import com.alankurniadi.storyapp.home.ListStoryViewModel
+import com.alankurniadi.storyapp.ui.home.ListStoryViewModel
 import com.alankurniadi.storyapp.utils.ViewModelFactory
 import com.alankurniadi.storyapp.utils.setDisableButton
 import com.alankurniadi.storyapp.utils.setEnableButton
@@ -66,7 +66,7 @@ class RegisterFragment : Fragment() {
                 }
             }
 
-            btnRegister.setOnClickListener { view ->
+            btnRegister.setOnClickListener {
                 registerProgress.visibility = View.VISIBLE
                 val name = edRegisterName.text.toString().trim()
                 val email = edRegisterEmail.text.toString().trim()

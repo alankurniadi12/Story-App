@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/listStoryFragment"
-        android:name="com.alankurniadi.storyapp.home.ListStoryFragment"
+        android:name="com.alankurniadi.storyapp.ui.home.ListStoryFragment"
         android:label="fragment_list_story"
         tools:layout="@layout/fragment_list_story" >
         <action
@@ -35,7 +35,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.alankurniadi.storyapp.authentication.register.RegisterFragment"
+        android:name="com.alankurniadi.storyapp.ui.authentication.register.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action
@@ -46,7 +46,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.alankurniadi.storyapp.authentication.login.LoginFragment"
+        android:name="com.alankurniadi.storyapp.ui.authentication.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -60,7 +60,7 @@
     </fragment>
     <fragment
         android:id="@+id/detailStoryFragment"
-        android:name="com.alankurniadi.storyapp.detail.DetailStoryFragment"
+        android:name="com.alankurniadi.storyapp.ui.detail.DetailStoryFragment"
         android:label="fragment_detail_story"
         tools:layout="@layout/fragment_detail_story" >
 
@@ -70,7 +70,7 @@
     </fragment>
     <fragment
         android:id="@+id/addStoryFragment"
-        android:name="com.alankurniadi.storyapp.add.AddStoryFragment"
+        android:name="com.alankurniadi.storyapp.ui.add.AddStoryFragment"
         android:label="fragment_add_story"
         tools:layout="@layout/fragment_add_story" >
         <action
@@ -81,7 +81,7 @@
     </fragment>
     <activity
         android:id="@+id/detailStoryActivity"
-        android:name="com.alankurniadi.storyapp.detail.DetailStoryActivity"
+        android:name="com.alankurniadi.storyapp.ui.detail.DetailStoryActivity"
         android:label="activity_detail_story"
         tools:layout="@layout/activity_detail_story" >
         <argument
